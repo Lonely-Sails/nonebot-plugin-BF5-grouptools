@@ -32,4 +32,4 @@ nb plugin install nonebot_plugin_BF5_grouptools
 
 ## 鸣谢
 
-> 本插件修改自 [nonebot-plugin-bf1-groptools](https://github.com/qienoob/nonebot_plugin_bf1_groptools)
+本插件修改自 [nonebot-plugin-bf1-groptools](https://github.com/qienoob/nonebot_plugin_bf1_groptools)

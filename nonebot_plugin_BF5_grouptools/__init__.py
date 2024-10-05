@@ -1,7 +1,17 @@
 from httpx import AsyncClient
 
 from nonebot import on_request, on_notice
+from nonebot.plugin import PluginMetadata
 from nonebot.adapters.onebot.v11 import Bot, GroupRequestEvent, GroupIncreaseNoticeEvent
+
+__plugin_meta__ = PluginMetadata(
+    name='BF5_grouptools',
+    description='基于 Nonebot2 的战地 5 QQ 群管理插件。',
+    usage='通过 管理群 -> 加群方式 ->需要身份认证` 中开启 需要回答问题并由管理员审核 并将机器人账号设为管理员。',
+    type='application',
+    homepage="https://github.com/Lonely-Sails/nonebot-plugin-BF5-grouptools",
+    supported_adapters={'~onebot.v11'},
+)
 
 players = {}
 
