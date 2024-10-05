@@ -6,32 +6,30 @@
 
 <div align="center">
 
-# nonebot_plugin_bf1_groptools
+# nonebot-plugin-BF5-grouptools
 </div>
-本插件可以实现验证bf1账号是否属实，如果属实即自动批准入群并修改其群名片为申请时输入的id  
+本插件可以实现验证 BF5 账号是否属实，如果属实即自动批准入群并修改其群名片为申请时输入的 ID。
 
-请在使用时通过`管理群`->`加群方式`->`需要身份认证`中开启`需要回答问题并由管理员审核`并将bot设为管理员  
+请在使用时通过 `管理群` -> `加群方式` -> `需要身份认证` 中开启 `需要回答问题并由管理员审核` 并将机器人账号设为管理员。
 
 
 ## 安装
 * 使用pip 
 ```
-pip install nonebot-plugin-bf1-groptools
+pip install nonebot_plugin_BF5_grouptools
 ```
 并在bot根目录的`pyproject.toml`文件中加入  
 ```
-plugins = ["nonebot_plugin_bf1_groptools"]
+plugins = ["nonebot_plugin_BF5_grouptools"]
 ```
 
 
-* 使用nb_cli（推荐）
+* 使用 nb_cli（推荐）
 ```
-nb plugin install nonebot_plugin_bf1_groptools
+nb plugin install nonebot_plugin_BF5_grouptools
 ```
 
 
-## 更多
-本项目是本人在nenobot社区发布的第一个项目，也是在github上发布的第一个项目，还是在pypi上发布的第一个包。  
-所以如有问题，请提交issue与我联系，请多多包涵，谢谢
+## 鸣谢
 
-
+> 本插件修改自 [nonebot-plugin-bf1-groptools](https://github.com/qienoob/nonebot_plugin_bf1_groptools)
