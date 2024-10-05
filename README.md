@@ -16,17 +16,17 @@
 ## 安装
 * 使用pip 
 ```
-pip install nonebot_plugin_BF5_grouptools
+pip install nonebot_plugin_bf5_grouptools
 ```
 并在bot根目录的`pyproject.toml`文件中加入  
 ```
-plugins = ["nonebot_plugin_BF5_grouptools"]
+plugins = ["nonebot_plugin_bf5_grouptools"]
 ```
 
 
 * 使用 nb_cli（推荐）
 ```
-nb plugin install nonebot_plugin_BF5_grouptools
+nb plugin install nonebot_plugin_bf5_grouptools
 ```
 
 

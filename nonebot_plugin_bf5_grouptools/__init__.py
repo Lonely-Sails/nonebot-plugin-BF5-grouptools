@@ -7,7 +7,7 @@ from nonebot.adapters.onebot.v11 import Bot, GroupRequestEvent, GroupIncreaseNot
 __plugin_meta__ = PluginMetadata(
     name='BF5_grouptools',
     description='基于 Nonebot2 的战地 5 QQ 群管理插件。',
-    usage='通过 管理群 -> 加群方式 ->需要身份认证` 中开启 需要回答问题并由管理员审核 并将机器人账号设为管理员。',
+    usage='通过 管理群 -> 加群方式 -> 需要身份认证 中开启 需要回答问题并由管理员审核 并将机器人账号设为管理员。',
     type='application',
     homepage="https://github.com/Lonely-Sails/nonebot-plugin-BF5-grouptools",
     supported_adapters={'~onebot.v11'},
@@ -51,7 +51,7 @@ async def _(event: GroupRequestEvent, bot: Bot):
 
 @notice_matcher.handle()
 async def _(event: GroupIncreaseNoticeEvent, bot: Bot):
-    if user_name := players.get(event.user_id):
+    if user_name := players.pop(event.user_id, None):
         await bot.set_group_card(group_id=event.group_id, user_id=event.user_id, card=user_name)
         await notice_matcher.finish(F'欢迎新人加入！已自动修改您的群名片为游戏名称：{user_name}', at_sender=True)
     await notice_matcher.finish('未找到您的申请记录，请联系管理员。', at_sender=True)
