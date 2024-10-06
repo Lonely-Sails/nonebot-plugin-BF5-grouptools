@@ -31,7 +31,8 @@ async def request(url: str, params: dict, retry_count: int = 3):
 
 @request_matcher.handle()
 async def _(event: GroupRequestEvent, bot: Bot):
-    user_name = event.comment.lstrip('答案：')
+    _, user_name = event.comment.split('\n')
+    user_name = user_name.lstrip('答案：')
     response = await request('https://api.bfvrobot.net/api/v2/bfv/checkPlayer', params={'name': user_name})
     if response is not None:
         if response.get('data'):
