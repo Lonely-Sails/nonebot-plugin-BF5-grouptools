@@ -1,8 +1,14 @@
-from httpx import AsyncClient
+import json
 
-from nonebot import on_request, on_notice
+from nonebot import on_request, on_notice, on_command
 from nonebot.plugin import PluginMetadata
-from nonebot.adapters.onebot.v11 import Bot, GroupRequestEvent, GroupIncreaseNoticeEvent
+from nonebot.params import CommandArg
+from nonebot.adapters.onebot.v11 import (
+    GroupIncreaseNoticeEvent, GroupRequestEvent, GroupMessageEvent, Message, Bot
+)
+
+from .data import Data
+from .network import request_player, request_ban
 
 __plugin_meta__ = PluginMetadata(
     name='BF5_grouptools',
@@ -13,46 +19,62 @@ __plugin_meta__ = PluginMetadata(
     supported_adapters={'~onebot.v11'},
 )
 
-players = {}
+data = Data()
 
-client = AsyncClient()
 notice_matcher = on_notice()
 request_matcher = on_request()
-
-
-async def request(url: str, params: dict, retry_count: int = 3):
-    response = await client.get(url, params=params)
-    if response.status_code == 200:
-        return response.json()
-    if retry_count > 0:
-        return await request(url, params, retry_count - 1)
-    return None
+query_ban_matcher = on_command('cxban=')
 
 
 @request_matcher.handle()
 async def _(event: GroupRequestEvent, bot: Bot):
     _, user_name = event.comment.split('\n')
     user_name = user_name.lstrip('答案：')
-    response = await request('https://api.bfvrobot.net/api/v2/bfv/checkPlayer', params={'name': user_name})
-    if response is not None:
-        if response.get('data'):
-            global players
-            players.setdefault(event.user_id, user_name)
-            await bot.set_group_add_request(flag=event.flag, sub_type=event.sub_type, approve=True)
-            await request_matcher.finish()
+    response = await request_player(user_name)
+    if response is None:
         await bot.set_group_add_request(
-            flag=event.flag, sub_type=event.sub_type,
-            approve=False, reason=F'未找到名为 {user_name} 的玩家！请检查输入是否正确，然后再次尝试。'
+            flag=event.flag, sub_type=event.sub_type, approve=False,
+            reason='请求超时，请等待几秒钟后再次尝试。'
         )
         await request_matcher.finish()
-    await bot.set_group_add_request(flag=event.flag, sub_type=event.sub_type, approve=False,
-                                    reason='请求超时，请等待几秒钟后再次尝试。')
+    if response:
+        data.players[user_name] = (event.user_id, response['personaId'])
+        data.save()
+        await bot.set_group_add_request(flag=event.flag, sub_type=event.sub_type, approve=True)
+        await request_matcher.finish()
+    await bot.set_group_add_request(
+        flag=event.flag, sub_type=event.sub_type,
+        approve=False, reason=F'未找到名为 {user_name} 的玩家！请检查输入是否正确，然后再次尝试。'
+    )
     await request_matcher.finish()
 
 
 @notice_matcher.handle()
 async def _(event: GroupIncreaseNoticeEvent, bot: Bot):
-    if user_name := players.pop(event.user_id, None):
+    if user_name := data.search_player_name(event.user_id):
         await bot.set_group_card(group_id=event.group_id, user_id=event.user_id, card=user_name)
         await notice_matcher.finish(F'欢迎新人加入！已自动修改您的群名片为游戏名称：{user_name}', at_sender=True)
     await notice_matcher.finish('未找到您的申请记录，请联系管理员。', at_sender=True)
+
+
+@query_ban_matcher.handle()
+async def _(event: GroupMessageEvent, args: Message = CommandArg()):
+    args = args.extract_plain_text().strip()
+    if args not in data.players:
+        response = await request_player(args)
+        if response is None:
+            await query_ban_matcher.finish('查询超时，请稍后再试。', at_sender=True)
+        if not response:
+            await query_ban_matcher.finish(F'未找到名为 {args} 的玩家！请检查输入是否正确，然后再次尝试。', at_sender=True)
+        data.players[args] = (None, response['personaId'])
+        data.save()
+    _, persona_id = data.players[args]
+    response = await request_ban(persona_id)
+    if response is None:
+        await query_ban_matcher.finish('查询超时，请稍后再试。', at_sender=True)
+    if response:
+        message_lines = []
+        for ban_info in response:
+            message_lines.append(json.dumps(ban_info, indent=4, ensure_ascii=False))
+        await query_ban_matcher.finish('\n'.join(message_lines), at_sender=True)
+    await query_ban_matcher.finish(F'玩家 {args} 还没有被踢过。', at_sender=True)
