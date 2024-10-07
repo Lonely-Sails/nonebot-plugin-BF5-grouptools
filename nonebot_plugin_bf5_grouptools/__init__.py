@@ -23,7 +23,7 @@ data = Data()
 
 notice_matcher = on_notice()
 request_matcher = on_request()
-query_ban_matcher = on_command('cxban=')
+query_ban_matcher = on_command('pb=')
 
 
 @request_matcher.handle()

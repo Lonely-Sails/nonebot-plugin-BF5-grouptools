@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nonebot_plugin_bf5_grouptools"
-version = "1.0.5"
+version = "1.0.6"
 description = "基于 Nonebot2 的战地 5 QQ 群管理插件。"
 license = "GPL3"
 authors = ["Lonely-Sails"]

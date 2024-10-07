@@ -13,7 +13,7 @@ async def request(url: str, params: dict, retry_count: int = 3):
 
 
 async def request_player(name: str):
-    response = await request('https://api.bfvrobot.net/api/v2/bfv/getPlayer', {'name': name})
+    response = await request('https://api.bfvrobot.net/api/v2/bfv/checkPlayer', {'name': name})
     if response:
         return response.get('data')
     return response
