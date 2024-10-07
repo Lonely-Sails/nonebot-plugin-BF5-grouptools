@@ -78,5 +78,7 @@ async def _(event: GroupMessageEvent, args: Message = CommandArg()):
             message_lines.append(F'{index + 1}.服务器 {ban_info['serverName']}')
             message_lines.append(F'  - 时间：{ban_info['createTime']}')
             message_lines.append(F'  - 原因：{ban_info['reason']}')
+        if len(response) > 5:
+            message_lines.append('\n    —— 已自动省略更多记录 ——')
         await query_ban_matcher.finish('\n'.join(message_lines), at_sender=True)
     await query_ban_matcher.finish(F'玩家 {args} 还没有被封禁过。', at_sender=True)
