@@ -24,8 +24,3 @@ class Data:
     def save(self):
         data = json.dumps(self.players)
         self.file_path.write_text(data, 'Utf-8')
-
-    def search_player_name(self, user_id: int):
-        for user_name, (test_user_id, _) in self.players.items():
-            if test_user_id == user_id:
-                return user_name
