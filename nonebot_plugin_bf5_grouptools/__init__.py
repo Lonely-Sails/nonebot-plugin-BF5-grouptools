@@ -6,6 +6,7 @@ from nonebot.adapters.onebot.v11 import (
 )
 
 from .data import Data
+from .utils import format_time
 from .network import request_player, request_ban
 
 __plugin_meta__ = PluginMetadata(
@@ -75,7 +76,7 @@ async def _(event: GroupMessageEvent, args: Message = CommandArg()):
         message_lines = [F'玩家 {args} 的封禁记录如下：']
         for index, ban_info in enumerate(response[:5]):
             message_lines.append(F'{index + 1}.服务器 {ban_info['serverName']}')
-            message_lines.append(F'  - 时间：{ban_info['createTime']}')
+            message_lines.append(F'  - 时间：{format_time(ban_info['createTime'])}')
             message_lines.append(F'  - 原因：{ban_info['reason']}')
         if len(response) > 5:
             message_lines.append('\n    —— 已自动省略更多记录 ——')
