@@ -20,5 +20,5 @@ async def request_player(name: str):
 
 
 async def request_ban(persona_id: int):
-    response = await request('https://api.bfvrobot.net/api/v2/bfv/getBannedLogsByPid', {'personaId': persona_id})
+    response = await request('https://api.bfvrobot.net/api/player/getBannedLogsByPersonaId', {'personaId': persona_id})
     return response.get('data')

@@ -1,5 +1,3 @@
-import json
-
 from nonebot import on_request, on_notice, on_startswith
 from nonebot.plugin import PluginMetadata
 from nonebot.params import CommandArg
